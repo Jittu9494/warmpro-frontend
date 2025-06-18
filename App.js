@@ -10,8 +10,8 @@ const api = axios.create({
 function App() {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [sigCustomer, setSigCustomer] = useState();
-  const [sigInstaller, setSigInstaller] = useState();
+  const [sigCustomer, setSigCustomer] = useState(null);
+  const [sigInstaller, setSigInstaller] = useState(null);
 
   useEffect(() => {
     async function fetchJobs() {
@@ -22,6 +22,7 @@ function App() {
   }, []);
 
   const submitSignatures = async () => {
+    if (!sigCustomer || !sigInstaller) return alert("Signature pads not ready");
     const customerSignature = sigCustomer.getTrimmedCanvas().toDataURL("image/png");
     const installerSignature = sigInstaller.getTrimmedCanvas().toDataURL("image/png");
     await api.post(`/jobs/${selectedJob.id}/signatures`, { customerSignature, installerSignature });
